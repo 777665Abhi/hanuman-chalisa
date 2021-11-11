@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Hanuman chalisa</string>
+    <string name="double_back">Press double to exit</string>
+    <string name="meaning">Meaning</string>
+    <string name="language">English</string>
+    <string name="suggestion">Suggestion</string>
+    <string name="enter_suggestion">Enter suggestion</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="contactus">Contact us</string>
+    <string name="exit">Exit</string>
+    <string name="navigation_drawer_open">navigation drawer open</string>
+    <string name="navigation_drawer_close">navigation drawer close</string>
+    <string name="home">Home</string>
+    <string name="rate_app">Rate app</string>
+    <string name="contact_us">Contact us</string>
+    <string name="about_us">About us</string>
+</resources>

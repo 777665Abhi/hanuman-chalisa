@@ -1,0 +1,22 @@
+package com.hindgyan.hanumanchalisa
+
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
+import com.hindgyan.hanumanchalisa.home.HomeActivity
+import com.hindgyan.hanumanchalisa.utils.IntentUtil
+
+class SplashActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        init()
+    }
+
+    private fun init() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            IntentUtil.startActivity(this, HomeActivity::class.java, true)
+        }, 3000)
+    }
+}

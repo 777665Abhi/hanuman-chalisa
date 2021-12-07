@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "244043731842",
+    "project_id": "hanuman-chalisa-a7b73",
+    "storage_bucket": "hanuman-chalisa-a7b73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244043731842:android:10e50398a2789f841c759b",
+        "android_client_info": {
+          "package_name": "com.hindgyan.hanumanchalisa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "244043731842-m51235t3vrnkg5n30vvm753mnq978f6r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hindgyan.hanumanchalisa",
+            "certificate_hash": "a17416da6e333447b3318f7ff4016b5929c726ab"
+          }
+        },
+        {
+          "client_id": "244043731842-5qgfudqs5p3m6tu45k00nvfodb5csbo1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxM6REvmtWXRx0k1-ZvGr4TynB1FlksGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "244043731842-5qgfudqs5p3m6tu45k00nvfodb5csbo1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

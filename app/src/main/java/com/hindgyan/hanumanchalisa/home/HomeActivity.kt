@@ -13,6 +13,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.hindgyan.hanumanchalisa.R
 import com.hindgyan.hanumanchalisa.databinding.ActivityHomeBinding
@@ -41,6 +43,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun init() {
+        //Initialize the Google Mobile Ads SDK
+        MobileAds.initialize(this)
+        //Load ad
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
         /*Hamburg icon sync in toolbar*/
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val toggle = ActionBarDrawerToggle(

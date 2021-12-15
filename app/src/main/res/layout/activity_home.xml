@@ -14,18 +14,12 @@
             android:id="@+id/lnContain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/containerAd"
             android:background="@drawable/background1"
             android:orientation="vertical"
             android:paddingHorizontal="60dp"
-            android:paddingVertical="50dp"
-            android:layout_above="@+id/adView">
-
-            <!--        <TextView-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="match_parent"-->
-            <!--            android:text="@string/chalisa"-->
-            <!--            android:textColor="@color/white"-->
-            <!--            android:textSize="16dp"/>-->
+            android:paddingVertical="50dp">
+            <!--Buttons block-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,40 +42,45 @@
                     android:text="@string/meaning" />
             </LinearLayout>
 
+            <!--Content-->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvData"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-
         </LinearLayout>
 
+        <!--AdView block-->
         <FrameLayout
-            android:id="@+id/frContainer"
+            android:id="@+id/containerAd"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
+            app:layout_constraintRight_toRightOf="parent" />
+        <!--Floating button-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/bnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/containerAd"
             android:layout_alignParentEnd="true"
             android:layout_margin="8dp"
             android:backgroundTint="@color/white"
-            android:src="@drawable/ic_play_24"
-            android:layout_above="@+id/adView" />
+            android:src="@drawable/ic_play_24" />
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

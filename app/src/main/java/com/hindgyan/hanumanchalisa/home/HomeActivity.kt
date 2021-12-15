@@ -2,7 +2,9 @@ package com.hindgyan.hanumanchalisa.home
 
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.review.testing.FakeReviewManager
+import com.hindgyan.hanumanchalisa.AboutUsActivity
 import com.hindgyan.hanumanchalisa.R
 import com.hindgyan.hanumanchalisa.databinding.ActivityHomeBinding
 import com.hindgyan.hanumanchalisa.dialog.ContactFragment
@@ -23,6 +27,7 @@ import com.hindgyan.hanumanchalisa.dialog.ExitFragment
 import com.hindgyan.hanumanchalisa.dialog.SuggestionFragment
 import com.hindgyan.hanumanchalisa.utils.Data
 import com.hindgyan.hanumanchalisa.utils.FragmentUtil
+import com.hindgyan.hanumanchalisa.utils.IntentUtil
 import com.hindgyan.hanumanchalisa.utils.LanguageUtil.Companion.setAppLocale
 import com.hindgyan.hanumanchalisa.utils.SharePreData
 
@@ -42,6 +47,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         init()
     }
 
+    /**Screen initialization*/
     private fun init() {
         //Initialize the Google Mobile Ads SDK
         MobileAds.initialize(this)
@@ -76,6 +82,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mediaPlayer = MediaPlayer.create(this, R.raw.hanuman_chalisa)
     }
 
+    /**Hamburg icon functionality*/
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -90,6 +97,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**Side navigation click handler*/
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
@@ -97,6 +105,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.nav_rate -> {
+                rateApp()
             }
 
             R.id.nav_suggestion -> {
@@ -112,10 +121,95 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.nav_about -> {
+               IntentUtil.startActivity(this,AboutUsActivity::class.java,false)
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    /**On click listener*/
+    override fun onClick(v: View?) {
+        when (v) {
+
+            //Switch language
+            binding.bnLanguage -> {
+                englishVersion = !englishVersion
+                var homeAdapter = if (englishVersion) {
+                    binding.bnLanguage.text = "हिंदी"
+                    HomeAdapter(Data.englishArrayData(), Data.englishArrayData(), meaning)
+                } else {
+                    //                 IntentUtil.startActivity(this, HomeActivity::class.java, true)
+                    binding.bnLanguage.text = "अंग्रेज़ी"
+                    HomeAdapter(Data.hindiArrayData(), Data.hindiArrayData(), meaning)
+                }
+                binding.rvData.layoutManager = LinearLayoutManager(this)
+                binding.rvData.adapter = homeAdapter
+                homeAdapter.notifyDataSetChanged()
+            }
+
+            //Switch the meaning
+            binding.bnHide -> {
+                meaning = !meaning
+                var homeAdapter = if (englishVersion)
+                    HomeAdapter(Data.englishArrayData(), Data.englishArrayMeaningData(), meaning)
+                else
+                    HomeAdapter(Data.hindiArrayData(), Data.hindiMeaningArrayData(), meaning)
+                binding.rvData.layoutManager = LinearLayoutManager(this)
+                binding.rvData.adapter = homeAdapter
+                homeAdapter.notifyDataSetChanged()
+            }
+
+            //Play music
+            binding.bnPlay -> {
+                playAudio()
+            }
+        }
+    }
+
+    /**Fun play the music*/
+    private fun playAudio() {
+        if (mediaPlayer.isPlaying) {
+            binding.bnPlay.setImageResource(R.drawable.ic_play_24)
+            mediaPlayer.pause()
+        } else {
+            binding.bnPlay.setImageResource(R.drawable.ic_pause_24)
+            mediaPlayer.start()
+        }
+    }
+
+    /**Rate the app*/
+    private fun rateApp() {
+//        val manager = ReviewManagerFactory.create(this)
+        val manager = FakeReviewManager(this)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // We got the ReviewInfo object
+                val reviewInfo = task.result
+            } else {
+                // There was some problem, log or handle the error code.
+                // @ReviewErrorCode val reviewErrorCode = (task.getException() as TaskException).errorCode
+            }
+        }
+    }
+
+    /**Call to phone*/
+    fun makeCall(context: Context, mob: String) {
+        try {
+            val intent = Intent(Intent.ACTION_DIAL)
+
+            intent.data = Uri.parse("tel:$mob")
+            context.startActivity(intent)
+        } catch (e: java.lang.Exception) {
+            Toast.makeText(context,
+                "Unable to call at this time", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**Setting language dynamically*/
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(ContextWrapper(newBase.setAppLocale("hi")))
     }
 
     /**Back button handling*/
@@ -136,58 +230,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /**On click listener*/
-    override fun onClick(v: View?) {
-        when (v) {
-
-            binding.bnLanguage -> {
-                englishVersion = !englishVersion
-                var homeAdapter = if (englishVersion) {
-                    binding.bnLanguage.text = "हिंदी"
-                    HomeAdapter(Data.englishArrayData(), Data.englishArrayData(), meaning)
-                } else {
-                    //                 IntentUtil.startActivity(this, HomeActivity::class.java, true)
-                    binding.bnLanguage.text = "अंग्रेज़ी"
-                    HomeAdapter(Data.hindiArrayData(), Data.hindiArrayData(), meaning)
-                }
-                binding.rvData.layoutManager = LinearLayoutManager(this)
-                binding.rvData.adapter = homeAdapter
-                homeAdapter.notifyDataSetChanged()
-            }
-
-            binding.bnHide -> {
-                meaning = !meaning
-                var homeAdapter = if (englishVersion)
-                    HomeAdapter(Data.englishArrayData(), Data.englishArrayMeaningData(), meaning)
-                else
-                    HomeAdapter(Data.hindiArrayData(), Data.hindiMeaningArrayData(), meaning)
-                binding.rvData.layoutManager = LinearLayoutManager(this)
-                binding.rvData.adapter = homeAdapter
-                homeAdapter.notifyDataSetChanged()
-            }
-
-            binding.bnPlay -> {
-                playAudio()
-            }
-        }
-    }
-
-    private fun playAudio() {
-        if (mediaPlayer.isPlaying) {
-            binding.bnPlay.setImageResource(R.drawable.ic_play_24)
-            mediaPlayer.pause()
-        }
-        else {
-            binding.bnPlay.setImageResource(R.drawable.ic_pause_24)
-            mediaPlayer.start()
-        }
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        // var language=SharePreData.getLanguage(this)
-        super.attachBaseContext(ContextWrapper(newBase.setAppLocale("hi")))
-    }
-
+    /**Close player while destroy*/
     override fun onDestroy() {
         mediaPlayer.release()
         super.onDestroy()

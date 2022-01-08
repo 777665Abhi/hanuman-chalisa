@@ -1,5 +1,7 @@
 package com.hindgyan.hanumanchalisa.home
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -18,18 +20,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
+import com.google.android.play.core.tasks.OnCompleteListener
+import com.google.android.play.core.tasks.OnFailureListener
+import com.google.android.play.core.tasks.Task
 import com.hindgyan.hanumanchalisa.AboutUsActivity
 import com.hindgyan.hanumanchalisa.R
 import com.hindgyan.hanumanchalisa.databinding.ActivityHomeBinding
 import com.hindgyan.hanumanchalisa.dialog.ContactFragment
 import com.hindgyan.hanumanchalisa.dialog.ExitFragment
 import com.hindgyan.hanumanchalisa.dialog.SuggestionFragment
-import com.hindgyan.hanumanchalisa.utils.Data
-import com.hindgyan.hanumanchalisa.utils.FragmentUtil
-import com.hindgyan.hanumanchalisa.utils.IntentUtil
+import com.hindgyan.hanumanchalisa.utils.*
 import com.hindgyan.hanumanchalisa.utils.LanguageUtil.Companion.setAppLocale
-import com.hindgyan.hanumanchalisa.utils.SharePreData
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -105,15 +109,16 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.nav_rate -> {
-                rateApp()
+                rateApp(this)
             }
 
             R.id.nav_suggestion -> {
-                FragmentUtil.showDialog(
-                    supportFragmentManager,
-                    SuggestionFragment(),
-                    "Suggestion_Tag"
-                )
+                Util.makeEmail(this)
+//                FragmentUtil.showDialog(
+//                    supportFragmentManager,
+//                    SuggestionFragment(),
+//                    "Suggestion_Tag"
+//                )
             }
 
             R.id.nav_contact -> {
@@ -121,7 +126,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.nav_about -> {
-               IntentUtil.startActivity(this,AboutUsActivity::class.java,false)
+                IntentUtil.startActivity(this, AboutUsActivity::class.java, false)
             }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -194,16 +199,22 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /**Call to phone*/
-    fun makeCall(context: Context, mob: String) {
+    private fun rateApp(mContext: Context?) {
         try {
-            val intent = Intent(Intent.ACTION_DIAL)
+            val manager = ReviewManagerFactory.create(mContext!!)
+            manager.requestReviewFlow()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val reviewInfo: ReviewInfo = it.result
+                        manager.launchReviewFlow((mContext as Activity?)!!, reviewInfo)
+                            .addOnFailureListener{ToastUtil.showToast(mContext,"Rating Failed")}
+                            .addOnCompleteListener{ToastUtil.showToast(mContext,"Review Completed, Thank You!")}
+                    }
+                }
+                .addOnFailureListener{ToastUtil.showToast(mContext,"Inapp rating is failed") }
 
-            intent.data = Uri.parse("tel:$mob")
-            context.startActivity(intent)
-        } catch (e: java.lang.Exception) {
-            Toast.makeText(context,
-                "Unable to call at this time", Toast.LENGTH_SHORT).show()
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
         }
     }
 

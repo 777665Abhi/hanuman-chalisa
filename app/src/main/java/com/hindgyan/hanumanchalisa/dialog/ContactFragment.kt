@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.hindgyan.hanumanchalisa.databinding.FragmentContactBinding
 import com.hindgyan.hanumanchalisa.utils.ToastUtil
+import com.hindgyan.hanumanchalisa.utils.Util
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -58,42 +59,18 @@ class ContactFragment : DialogFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             binding.lnEmail -> {
-                makeEmail(requireContext())
+                Util.makeEmail(requireContext())
             }
             binding.lnPhone -> {
-                makeCall(requireContext(), "8283820405")
+                Util.makeCall(requireContext(), "8283820405")
             }
         }
         dismiss()
     }
 
 
-    /**Call to phone*/
-    private fun makeCall(context: Context, mob: String) {
-        try {
-            val intent = Intent(Intent.ACTION_DIAL)
 
-            intent.data = Uri.parse("tel:$mob")
-            context.startActivity(intent)
-        } catch (e: java.lang.Exception) {
-            ToastUtil.showToast(context,"Unable to call at this time")
-        }
-    }
 
-    /**Email to feedback*/
-    private fun makeEmail(context: Context) {
-        try {
-            val emailIntent =  Intent(Intent.ACTION_SEND);
-            emailIntent.type = "text/plain";
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("address@domain.com"))
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Some Subject");
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Some body");
-            context.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-        } catch (e: Exception) {
-            ToastUtil.showToast(context,"Unable to email at this time")
-
-        }
-    }
 
     companion object {
         @JvmStatic

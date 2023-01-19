@@ -27,6 +27,7 @@ class HomeAdapter(
         holder.tvTittle.text = hindiArray[position]
         if (meaning) {
             holder.tvMeaning.visibility = View.VISIBLE
+
             holder.tvMeaning.text = hindiMeaningArray[position]
         } else
             holder.tvMeaning.visibility = View.GONE

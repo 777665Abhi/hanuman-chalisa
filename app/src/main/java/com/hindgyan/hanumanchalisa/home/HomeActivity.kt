@@ -28,6 +28,8 @@ import com.google.android.play.core.tasks.OnFailureListener
 import com.google.android.play.core.tasks.Task
 import com.hindgyan.hanumanchalisa.AboutUsActivity
 import com.hindgyan.hanumanchalisa.R
+import com.hindgyan.hanumanchalisa.arti.AartiActivity
+import com.hindgyan.hanumanchalisa.chalisa.ChalisaActivity
 import com.hindgyan.hanumanchalisa.databinding.ActivityHomeBinding
 import com.hindgyan.hanumanchalisa.dialog.ContactFragment
 import com.hindgyan.hanumanchalisa.dialog.ExitFragment
@@ -42,6 +44,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var doubleBackToExitPressedOnce = false
     private var meaning: Boolean = false
     var englishVersion: Boolean = false
+
     lateinit var mediaPlayer: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,22 +72,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         /*Listener*/
         binding.nvView.setNavigationItemSelectedListener(this)
-        binding.bnLanguage.setOnClickListener(this)
-        binding.bnHide.setOnClickListener(this)
+        binding.lnOption1.setOnClickListener(this)
+        binding.lnOption2.setOnClickListener(this)
         binding.bnPlay.setOnClickListener(this)
 
-        /*Setting initial data*/
-        val homeAdapter = if (SharePreData.getLanguage(this).equals("hi")) {
-            HomeAdapter(Data.hindiArrayData(), Data.hindiArrayData(), false)
 
-        } else {
-            HomeAdapter(Data.hindiArrayData(), Data.englishArrayData(), false)
-        }
-        binding.rvData.layoutManager = LinearLayoutManager(this)
-        binding.rvData.adapter = homeAdapter
-        /*Player instance*/
-        mediaPlayer = MediaPlayer.create(this, R.raw.hanuman_chalisa)
     }
+
 
     /**Hamburg icon functionality*/
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -138,33 +132,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (v) {
 
             //Switch language
-            binding.bnLanguage -> {
-                englishVersion = !englishVersion
-                var homeAdapter = if (englishVersion) {
-                    binding.bnLanguage.text = "हिंदी"
-                    HomeAdapter(Data.englishArrayData(), Data.englishArrayData(), meaning)
-                } else {
-                    //                 IntentUtil.startActivity(this, HomeActivity::class.java, true)
-                    binding.bnLanguage.text = "अंग्रेज़ी"
-                    HomeAdapter(Data.hindiArrayData(), Data.hindiArrayData(), meaning)
+                binding.lnOption1->{
+                   IntentUtil.startActivity(this,ChalisaActivity::class.java,false)
                 }
-                binding.rvData.layoutManager = LinearLayoutManager(this)
-                binding.rvData.adapter = homeAdapter
-                homeAdapter.notifyDataSetChanged()
+            binding.lnOption2 ->{
+                IntentUtil.startActivity(this,AartiActivity::class.java,false)
             }
-
-            //Switch the meaning
-            binding.bnHide -> {
-                meaning = !meaning
-                var homeAdapter = if (englishVersion)
-                    HomeAdapter(Data.englishArrayData(), Data.englishArrayMeaningData(), meaning)
-                else
-                    HomeAdapter(Data.hindiArrayData(), Data.hindiMeaningArrayData(), meaning)
-                binding.rvData.layoutManager = LinearLayoutManager(this)
-                binding.rvData.adapter = homeAdapter
-                homeAdapter.notifyDataSetChanged()
-            }
-
             //Play music
             binding.bnPlay -> {
                 playAudio()

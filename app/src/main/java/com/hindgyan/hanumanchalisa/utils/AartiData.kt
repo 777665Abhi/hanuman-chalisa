@@ -4,7 +4,7 @@ class AartiData {
     companion object {
         /**Hindi Lyric and meaning*/
 
-        fun hindiAartiArrayData(): ArrayList<String> {
+        fun hindiList(): ArrayList<String> {
             val hindiArray = ArrayList<String>()
             hindiArray.add(
                "आरती कीजै हनुमान लला की।दुष्ट दलन रघुनाथ कला की॥\n" +
@@ -75,7 +75,7 @@ class AartiData {
 
         /**English Lyric and meaning*/
 
-        fun englishAartiList(): ArrayList<String> {
+        fun englishList(): ArrayList<String> {
             val englishList = ArrayList<String>()
             englishList.add(
               "Aarti Kije Hanuman Lala Ki।Dusht Dalan Ragunath Kala Ki॥\n" +

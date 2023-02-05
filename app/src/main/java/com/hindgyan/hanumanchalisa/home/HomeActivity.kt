@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,16 +14,12 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
-import com.google.android.play.core.tasks.OnCompleteListener
-import com.google.android.play.core.tasks.OnFailureListener
-import com.google.android.play.core.tasks.Task
 import com.hindgyan.hanumanchalisa.AboutUsActivity
 import com.hindgyan.hanumanchalisa.R
 import com.hindgyan.hanumanchalisa.arti.AartiActivity
@@ -33,7 +27,6 @@ import com.hindgyan.hanumanchalisa.chalisa.ChalisaActivity
 import com.hindgyan.hanumanchalisa.databinding.ActivityHomeBinding
 import com.hindgyan.hanumanchalisa.dialog.ContactFragment
 import com.hindgyan.hanumanchalisa.dialog.ExitFragment
-import com.hindgyan.hanumanchalisa.dialog.SuggestionFragment
 import com.hindgyan.hanumanchalisa.utils.*
 import com.hindgyan.hanumanchalisa.utils.LanguageUtil.Companion.setAppLocale
 
@@ -74,7 +67,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.nvView.setNavigationItemSelectedListener(this)
         binding.lnOption1.setOnClickListener(this)
         binding.lnOption2.setOnClickListener(this)
-        binding.bnPlay.setOnClickListener(this)
+        binding.lnOption3.setOnClickListener(this)
+        binding.lnOption4.setOnClickListener(this)
+//        binding.bnPlay.setOnClickListener(this)
 
 
     }
@@ -129,32 +124,43 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     /**On click listener*/
     override fun onClick(v: View?) {
+        var  bundle=Bundle()
         when (v) {
 
             //Switch language
-                binding.lnOption1->{
-                   IntentUtil.startActivity(this,ChalisaActivity::class.java,false)
-                }
-            binding.lnOption2 ->{
-                IntentUtil.startActivity(this,AartiActivity::class.java,false)
+            binding.lnOption1 -> {
+                bundle.putInt(Constants.OPTION,1)
+                IntentUtil.startActivityWithLoad(this, AartiActivity::class.java, bundle,false,)
+            }
+            binding.lnOption2 -> {
+                bundle.putInt(Constants.OPTION,2)
+                IntentUtil.startActivityWithLoad(this, AartiActivity::class.java, bundle,false,)
+            }
+            binding.lnOption3 -> {
+                bundle.putInt(Constants.OPTION,3)
+                IntentUtil.startActivityWithLoad(this, AartiActivity::class.java, bundle,false,)
+            }
+            binding.lnOption4 -> {
+                bundle.putInt(Constants.OPTION,4)
+                IntentUtil.startActivityWithLoad(this, AartiActivity::class.java, bundle,false,)
             }
             //Play music
-            binding.bnPlay -> {
-                playAudio()
-            }
+//            binding.bnPlay -> {
+//                playAudio()
+//            }
         }
     }
 
     /**Fun play the music*/
-    private fun playAudio() {
-        if (mediaPlayer.isPlaying) {
-            binding.bnPlay.setImageResource(R.drawable.ic_play_24)
-            mediaPlayer.pause()
-        } else {
-            binding.bnPlay.setImageResource(R.drawable.ic_pause_24)
-            mediaPlayer.start()
-        }
-    }
+//    private fun playAudio() {
+//        if (mediaPlayer.isPlaying) {
+//            binding.bnPlay.setImageResource(R.drawable.ic_play_24)
+//            mediaPlayer.pause()
+//        } else {
+//            binding.bnPlay.setImageResource(R.drawable.ic_pause_24)
+//            mediaPlayer.start()
+//        }
+//    }
 
     /**Rate the app*/
     private fun rateApp() {
@@ -180,11 +186,16 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (it.isSuccessful) {
                         val reviewInfo: ReviewInfo = it.result
                         manager.launchReviewFlow((mContext as Activity?)!!, reviewInfo)
-                            .addOnFailureListener{ToastUtil.showToast(mContext,"Rating Failed")}
-                            .addOnCompleteListener{ToastUtil.showToast(mContext,"Review Completed, Thank You!")}
+                            .addOnFailureListener { ToastUtil.showToast(mContext, "Rating Failed") }
+                            .addOnCompleteListener {
+                                ToastUtil.showToast(
+                                    mContext,
+                                    "Review Completed, Thank You!"
+                                )
+                            }
                     }
                 }
-                .addOnFailureListener{ToastUtil.showToast(mContext,"Inapp rating is failed") }
+                .addOnFailureListener { ToastUtil.showToast(mContext, "Inapp rating is failed") }
 
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()

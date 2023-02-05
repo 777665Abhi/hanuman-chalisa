@@ -21,6 +21,6 @@ class SplashActivity : AppCompatActivity() {
         //Moving to Home screen
         Handler(Looper.getMainLooper()).postDelayed({
             IntentUtil.startActivity(this, HomeActivity::class.java, true)
-        }, 3000)
+        }, 2500)
     }
 }
